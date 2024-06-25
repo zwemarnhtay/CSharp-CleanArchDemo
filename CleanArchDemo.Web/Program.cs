@@ -1,7 +1,23 @@
+using CleanArchDemo.Application.Interfaces;
+using CleanArchDemo.Application.Services;
+using CleanArchDemo.Domain.Entities;
+using CleanArchDemo.Domain.Interfaces;
+using CleanArchDemo.Infrastructure.Db;
+using CleanArchDemo.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<AppDbContext>(opt =>
+{
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("Dbconnection"));
+}, ServiceLifetime.Transient, ServiceLifetime.Transient)
+    .AddScoped<IUserService, UserService>()
+    .AddScoped<IRepository<User>, UserRepository>();
+
 
 var app = builder.Build();
 
@@ -22,6 +38,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=User}/{action=Index}/{id?}");
 
 app.Run();
