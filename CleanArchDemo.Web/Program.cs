@@ -1,9 +1,5 @@
-using CleanArchDemo.Application.Interfaces;
-using CleanArchDemo.Application.Services;
-using CleanArchDemo.Domain.Entities;
-using CleanArchDemo.Domain.Interfaces;
 using CleanArchDemo.Infrastructure.Db;
-using CleanArchDemo.Infrastructure.Repositories;
+using CleanArchDemo.Web;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,10 +9,10 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("Dbconnection"));
-}, ServiceLifetime.Transient, ServiceLifetime.Transient)
-    .AddScoped<IUserService, UserService>()
-    .AddScoped<IRepository<User>, UserRepository>();
+  opt.UseSqlServer(builder.Configuration.GetConnectionString("Dbconnection"));
+}, ServiceLifetime.Transient, ServiceLifetime.Transient);
+
+builder.Services.AddServices();
 
 
 var app = builder.Build();
